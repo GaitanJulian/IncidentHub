@@ -45,8 +45,6 @@
     "morgan": "^1.10.1",
     "swagger-ui-express": "^5.0.1",
     "uuid": "^13.0.0",
-    "zod": "^4.1.12",
-    "test": "jest --passWithNoTests",
-    "test:watch": "jest --watch"
+    "zod": "^4.1.12"
   }
 }
