@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
+import { requestId } from "./middleware/requestId";
 import morgan from "morgan";
 import { errorHandler } from "./middleware/errorHandler";
 
@@ -11,9 +12,17 @@ import authRoutes from "./modules/auth/auth.routes";
 import serviceRoutes from "./modules/services/services.routes";
 import incidentRoutes from "./modules/incidents/incidents.routes";
 
+import { authLimiter } from "./middleware/rateLimit";
+
 export const app = express();
 
+app.use("/auth", authLimiter);
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(openapiSpec));
+
+app.use(requestId);
+
+morgan.token("rid", (req) => (req as any).requestId as string);
+app.use(morgan(':method :url :status :response-time ms rid=:rid'));
 
 app.use(cors());
 app.use(helmet());
