@@ -1,0 +1,30 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16
+    container_name: ihub-db
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: incidenthub
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: ./backend          # <--- MUY IMPORTANTE
+      dockerfile: Dockerfile
+    container_name: ihub-api
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/incidenthub?schema=public
+      JWT_SECRET: dev-secret
+      PORT: 4001
+      NODE_ENV: production
+    ports:
+      - "4001:4001"
+
+volumes:
+  pgdata:
