@@ -1,7 +1,7 @@
-import { v4 as uuid } from "uuid";
+import { randomUUID } from "crypto";
 import type { Request, Response, NextFunction } from "express";
 
 export function requestId(req: Request, _res: Response, next: NextFunction) {
-  (req as any).requestId = req.headers["x-request-id"] || uuid();
+  (req as any).requestId = (req.headers["x-request-id"] as string) || randomUUID();
   next();
 }
