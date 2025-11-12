@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // o "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  REPORTER
+  SUPPORT
+  ADMIN
+}
+
+enum IncidentStatus {
+  OPEN
+  INVESTIGATING
+  RESOLVED
+}
+
+enum Severity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+model User {
+  id           String  @id @default(cuid())
+  email        String  @unique
+  name         String
+  passwordHash String
+  role         Role    @default(REPORTER)
+  incidents    Incident[] @relation("ReporterIncidents")
+  assigned     Incident[] @relation("AssigneeIncidents")
+  updates      IncidentUpdate[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Service {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  incidents Incident[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Incident {
+  id          String         @id @default(cuid())
+  title       String
+  description String
+  status      IncidentStatus @default(OPEN)
+  severity    Severity       @default(MEDIUM)
+
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id])
+
+  reporterId String
+  reporter   User   @relation("ReporterIncidents", fields: [reporterId], references: [id])
+
+  assigneeId String?
+  assignee   User?  @relation("AssigneeIncidents", fields: [assigneeId], references: [id])
+
+  updates    IncidentUpdate[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model IncidentUpdate {
+  id         String   @id @default(cuid())
+  incidentId String
+  incident   Incident @relation(fields: [incidentId], references: [id])
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  message    String
+  createdAt  DateTime @default(now())
+}
