@@ -14,10 +14,24 @@ router.get("/", requireAuth, async (_req, res) => {
 
 // POST /services – solo ADMIN
 router.post("/", requireAuth, requireRole(Role.ADMIN), async (req, res) => {
-  const body = z.object({ name: z.string().min(2) }).safeParse(req.body);
-  if (!body.success) return res.status(400).json({ message: "Invalid name" });
+  const body = z
+    .object({
+      name: z.string().min(2),
+      description: z.string().min(3).optional(),
+    })
+    .safeParse(req.body);
 
-  const created = await prisma.service.create({ data: { name: body.data.name } });
+  if (!body.success) {
+    return res.status(400).json({ message: "Invalid data" });
+  }
+
+  const created = await prisma.service.create({
+    data: {
+      name: body.data.name,
+      description: body.data.description ?? null,
+    },
+  });
+
   res.status(201).json(created);
 });
 
