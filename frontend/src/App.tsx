@@ -5,9 +5,15 @@ import { useAuth } from "./context/AuthContext";
 import LoginPage from "./pages/LoginPage";
 import IncidentsListPage from "./pages/IncidentsListPage";
 import CreateIncidentPage from "./pages/CreateIncidentPage";
+import ServicesPage from "./pages/ServicesPage";
+import AppLayout from "./components/layout/AppLayout";
 
 const App = () => {
   const { isAuthenticated } = useAuth();
+
+  const withLayout = (component: JSX.Element) => (
+    <AppLayout>{component}</AppLayout>
+  );
 
   return (
     <Routes>
@@ -27,14 +33,27 @@ const App = () => {
       <Route
         path="/incidents"
         element={
-          isAuthenticated ? <IncidentsListPage /> : <Navigate to="/login" replace />
+          isAuthenticated
+            ? withLayout(<IncidentsListPage />)
+            : <Navigate to="/login" replace />
         }
       />
 
       <Route
         path="/incidents/create"
         element={
-          isAuthenticated ? <CreateIncidentPage /> : <Navigate to="/login" replace />
+          isAuthenticated
+            ? withLayout(<CreateIncidentPage />)
+            : <Navigate to="/login" replace />
+        }
+      />
+
+      <Route
+        path="/services"
+        element={
+          isAuthenticated
+            ? withLayout(<ServicesPage />)
+            : <Navigate to="/login" replace />
         }
       />
     </Routes>
