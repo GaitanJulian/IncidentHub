@@ -1,0 +1,128 @@
+# IncidentHub
+
+IncidentHub is a RESTful API designed to manage internal incidents for support, IT operations, and service management teams.  
+It provides authentication with JWT, incident tracking, service management, role-based access control, and audit logs — all built with TypeScript, Express, Prisma, PostgreSQL, and Docker.
+
+## 🚀 Production Deployment
+
+- **API Base URL:** https://incidenthub-kxjp.onrender.com  
+- **Swagger UI:** https://incidenthub-kxjp.onrender.com/docs  
+- **Health Check:** https://incidenthub-kxjp.onrender.com/health  
+
+---
+
+# 📌 Features
+
+### 🔐 Authentication & Users
+- User registration
+- Login with JWT
+- Password hashing using bcrypt
+- Role-based access (`REPORTER`, `SUPPORT`, `ADMIN`)
+- Auth middleware for protected routes
+
+### 🛠️ Incident Management
+- Create, read, update incidents
+- Assign reporter and support agent
+- Add comments and timeline updates
+- Severity levels:
+  - `LOW`, `MEDIUM`, `HIGH`, `CRITICAL`
+- Status workflow:
+  - `OPEN` → `INVESTIGATING` → `RESOLVED`
+- Filtering by status and service
+
+### 📦 Service Management
+- Create new services (ADMIN only)
+- List existing services
+
+### 🧩 Developer Experience
+- Zod request validation
+- UUID-based request tracing middleware
+- Rate limiting for auth endpoints
+- Helmet for security
+- CORS configured
+- Error handler with structured JSON logs
+- OpenAPI 3.0 documentation auto-generated
+
+---
+
+# 🧱 Tech Stack
+
+- **Runtime:** Node.js 20  
+- **Language:** TypeScript  
+- **Framework:** Express 5  
+- **Database:** PostgreSQL 16  
+- **ORM:** Prisma  
+- **Authentication:** JWT + bcrypt  
+- **Validation:** Zod  
+- **Documentation:** Swagger (OpenAPI 3)  
+- **Containers:** Docker & Docker Compose  
+- **Deployment:** Render  
+
+---
+
+# 📂 Project Structure
+
+```text
+IncidentHub/
+├── docker-compose.yml
+├── backend/
+│   ├── Dockerfile
+│   ├── package.json
+│   ├── tsconfig.json
+│   ├── prisma/
+│   │   ├── schema.prisma
+│   │   └── seed.ts
+│   └── src/
+│       ├── index.ts            # Entry point
+│       ├── app.ts              # Express app configuration
+│       ├── modules/
+│       │   ├── auth/           # Login & registration
+│       │   ├── services/       # Create/list services
+│       │   └── incidents/      # Incident CRUD
+│       ├── middleware/         # Auth, requestId, rateLimit, errorHandler
+│       ├── utils/              # Prisma, logger, config
+│       └── docs/               # OpenAPI specification
+```
+
+## ⚙️ Environment Variables
+
+Create a `.env` file inside `/backend`:
+```code
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/incidenthub?schema=public"
+JWT_SECRET="your-secret-key"
+PORT=4001
+```
+
+## 🐳 Running with Docker (Recommended)
+
+From the root folder:
+
+```code
+docker-compose up --build
+```
+This will start:
+- PostgreSQL on port **5432**
+- API on port **4001**
+
+Access:
+- Local API: http://localhost:4001
+- Swagger: http://localhost:4001/docs
+
+## 💻 Running Locally Without Docker
+
+```
+cd backend
+npm install
+
+npm run prisma:generate
+npm run prisma:migrate
+
+npm run seed
+
+Seeded admin user:
+email:    admin@incidenthub.dev
+password: admin12345
+
+npm run dev
+```
+
