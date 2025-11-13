@@ -50,10 +50,14 @@ const IncidentDetailPage = () => {
   };
 
   const handleCommentSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    if (!id || !newComment.trim()) return;
-    commentMutation.mutate({ id, content: newComment.trim() });
-  };
+  e.preventDefault();
+  if (!id || !newComment.trim()) return;
+
+  commentMutation.mutate({
+    id,
+    message: newComment.trim(), 
+  });
+};
 
   if (isLoading) {
     return <p className="text-slate-300 text-sm">Loading incident...</p>;

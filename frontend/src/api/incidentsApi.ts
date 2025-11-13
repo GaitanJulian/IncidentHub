@@ -26,14 +26,13 @@ export const createIncident = async (data: {
 
 export const addIncidentComment = async (params: {
   id: string;
-  content: string;
+  message: string;
 }) => {
   const response = await apiClient.post(`/incidents/${params.id}/comment`, {
-    content: params.content,
+    message: params.message,
   });
   return response.data;
 };
-
 export const updateIncidentStatus = async (params: {
   id: string;
   status: "OPEN" | "INVESTIGATING" | "RESOLVED";
