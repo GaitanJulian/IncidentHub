@@ -101,18 +101,15 @@ const commentSchema = z.object({ message: z.string().min(2) });
 router.post("/:id/comment", requireAuth, async (req, res) => {
   const { id } = req.params;
 
-  // Validar body
   const parsed = commentSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ message: "Invalid message" });
 
   const idOk = z.string().min(10).safeParse(id);
   if (!idOk.success) return res.status(400).json({ message: "Invalid incident id" });
 
-  // Verificar que el incidente exista para evitar 500 por FK
   const incident = await prisma.incident.findUnique({ where: { id } });
   if (!incident) return res.status(404).json({ message: "Incident not found" });
 
-  // Crear comentario
   const user = (req as any).user;
   const created = await prisma.incidentUpdate.create({
     data: { incidentId: id, userId: user.id, message: parsed.data.message },

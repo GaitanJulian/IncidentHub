@@ -50,14 +50,14 @@ const IncidentDetailPage = () => {
   };
 
   const handleCommentSubmit = (e: FormEvent) => {
-  e.preventDefault();
-  if (!id || !newComment.trim()) return;
+    e.preventDefault();
+    if (!id || !newComment.trim()) return;
 
-  commentMutation.mutate({
-    id,
-    message: newComment.trim(), 
-  });
-};
+    commentMutation.mutate({
+      id,
+      message: newComment.trim(),
+    });
+  };
 
   if (isLoading) {
     return <p className="text-slate-300 text-sm">Loading incident...</p>;
@@ -66,7 +66,9 @@ const IncidentDetailPage = () => {
   if (isError || !incident) {
     return (
       <div className="space-y-3">
-        <p className="text-red-400 text-sm">Failed to load incident.</p>
+        <p className="text-red-400 text-sm">
+          Incident not found or failed to load.
+        </p>
         <button
           onClick={() => navigate("/incidents")}
           className="text-sm text-slate-300 hover:text-white underline"
@@ -79,7 +81,7 @@ const IncidentDetailPage = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* header */}
       <div className="flex items-start justify-between gap-4">
         <div>
           <button
@@ -120,7 +122,7 @@ const IncidentDetailPage = () => {
         </div>
       </div>
 
-      {/* Main info + metadata */}
+      {/* main */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-4">
           <div className="bg-slate-800 border border-slate-700 rounded-xl p-4">
@@ -133,26 +135,30 @@ const IncidentDetailPage = () => {
           <div className="bg-slate-800 border border-slate-700 rounded-xl p-4">
             <h2 className="text-sm font-semibold mb-3">Comments</h2>
 
-            {incident.comments?.length === 0 && (
+            {incident.updates?.length === 0 && (
               <p className="text-sm text-slate-400">
                 No comments yet. Use the form below to add the first update.
               </p>
             )}
 
             <div className="space-y-3">
-              {incident.comments?.map((comment: any) => (
+              {incident.updates?.map((update: any) => (
                 <div
-                  key={comment.id}
+                  key={update.id}
                   className="rounded-lg bg-slate-900 border border-slate-800 px-3 py-2"
                 >
                   <p className="text-sm text-slate-100 whitespace-pre-line">
-                    {comment.content}
+                    {update.message}
                   </p>
                   <div className="mt-1 flex justify-between text-[11px] text-slate-500">
-                    <span>{comment.author?.name ?? "Unknown user"}</span>
                     <span>
-                      {comment.createdAt
-                        ? new Date(comment.createdAt).toLocaleString()
+                      {update.user?.name ??
+                        update.user?.email ??
+                        "Unknown user"}
+                    </span>
+                    <span>
+                      {update.createdAt
+                        ? new Date(update.createdAt).toLocaleString()
                         : ""}
                     </span>
                   </div>
@@ -195,7 +201,9 @@ const IncidentDetailPage = () => {
             </p>
             <p>
               <span className="text-slate-400">Reporter:</span>{" "}
-              {incident.reporter?.name ?? incident.reporter?.email ?? "-"}
+              {incident.reporter?.name ??
+                incident.reporter?.email ??
+                "-"}
             </p>
             <p>
               <span className="text-slate-400">Created:</span>{" "}
