@@ -9,6 +9,11 @@ It provides authentication with JWT, incident tracking, service management, role
 - **Swagger UI:** https://incidenthub-kxjp.onrender.com/docs  
 - **Health Check:** https://incidenthub-kxjp.onrender.com/health  
 
+### **Frontend Dashboard**
+*(Optional: add your Vercel/Netlify URL here once deployed)*  
+- **Local Development:** http://localhost:5173 
+
+
 ---
 
 # 📌 Features
@@ -43,7 +48,29 @@ It provides authentication with JWT, incident tracking, service management, role
 - Error handler with structured JSON logs
 - OpenAPI 3.0 documentation auto-generated
 
+## 🖥️ Frontend Dashboard (React)
+A modern, responsive dashboard built with:
+
+- **React + TypeScript**
+- **Vite**
+- **TailwindCSS v4**
+- **React Query (TanStack Query)**
+- **Axios**
+- **React Router v6**
+
+### Frontend Features
+- Login screen  
+- Incident dashboard with filters  
+- Service dropdown and severity badges  
+- Incident detail page  
+- Status changer (Support/Admin only)  
+- Add comments/updates  
+- Admin panel for service creation  
+- Mobile-friendly layout  
+
 ---
+
+
 
 # 🧱 Tech Stack
 
@@ -73,15 +100,27 @@ IncidentHub/
 │   │   ├── schema.prisma
 │   │   └── seed.ts
 │   └── src/
-│       ├── index.ts            # Entry point
-│       ├── app.ts              # Express app configuration
+│       ├── index.ts
+│       ├── app.ts
 │       ├── modules/
-│       │   ├── auth/           # Login & registration
-│       │   ├── services/       # Create/list services
-│       │   └── incidents/      # Incident CRUD
-│       ├── middleware/         # Auth, requestId, rateLimit, errorHandler
-│       ├── utils/              # Prisma, logger, config
-│       └── docs/               # OpenAPI specification
+│       │   ├── auth/
+│       │   ├── services/
+│       │   └── incidents/
+│       ├── middleware/
+│       ├── utils/
+│       └── docs/
+│
+├── frontend/
+│   ├── index.html
+│   ├── vite.config.ts
+│   ├── package.json
+│   └── src/
+│       ├── api/
+│       ├── components/
+│       ├── context/
+│       ├── pages/
+│       ├── styles/
+│       └── router/
 ```
 
 ## ⚙️ Environment Variables
@@ -125,4 +164,101 @@ password: admin12345
 
 npm run dev
 ```
+
+## 🔐 Authentication Flow
+
+### 1. Register a new user  
+**POST /auth/register**
+
+```json
+{
+  "email": "user@example.com",
+  "name": "User Name",
+  "password": "password123",
+  "role": "REPORTER"
+}
+```
+### 2. Login  
+**POST /auth/login**
+
+```json
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+
+Use the token in protected routes:
+
+```
+Authorization: Bearer <JWT>
+```
+
+## 📌 API Endpoints Summary
+
+### Health
+| Method | Endpoint | Description |
+|--------|-----------|-------------|
+| GET | `/health` | API status |
+
+### Auth
+| Method | Endpoint | Description |
+|--------|-----------|-------------|
+| POST | `/auth/register` | Create user |
+| POST | `/auth/login` | Login & get JWT |
+
+### Services
+| Method | Endpoint | Role | Description |
+|--------|-----------|--------|-------------|
+| GET | `/services` | Any authenticated | List services |
+| POST | `/services` | ADMIN | Create service |
+
+### Incidents
+| Method | Endpoint | Role | Description |
+|--------|-----------|--------|-------------|
+| GET | `/incidents` | Any | List incidents + filters |
+| GET | `/incidents/:id` | Any | Incident details |
+| POST | `/incidents` | REPORTER | Create incident |
+| PUT | `/incidents/:id/status` | SUPPORT/ADMIN | Update status |
+| POST | `/incidents/:id/comment` | Any | Add comment |
+
+Full documentation: **Swagger UI** at `/docs`.
+
+## 🧪 Testing
+
+Run all tests:
+
+```code
+npm run test
+```
+
+## 🌱 Database Seed
+
+Run:
+
+```code
+npm run seed
+```
+
+This creates:
+- An Admin user  
+- Default services  
+
+Admin credentials:
+email:    admin@incidenthub.dev
+password: admin12345
+
+
+## 🏁 Final Notes
+
+IncidentHub is a production-ready backend designed to demonstrate:
+
+- Clean modular architecture  
+- Prisma + PostgreSQL + Docker  
+- JWT authentication  
+- Structured logging  
+- Request validation  
+- Swagger documentation  
+- Role-based access control  
+- Professional API deployment with Render  
 
