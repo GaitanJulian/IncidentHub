@@ -13,12 +13,12 @@ const CreateIncidentPage = () => {
   const [serviceId, setServiceId] = useState("");
   const [severity, setSeverity] = useState<"LOW" | "MEDIUM" | "HIGH" | "CRITICAL">("MEDIUM");
 
-  const { data: services, isLoading: loadingServices } = useQuery({
+  const { data: services, isPending: loadingServices } = useQuery({
     queryKey: ["services"],
     queryFn: getServices,
   });
 
-  const { mutateAsync, isLoading: creating, isError, error } = useMutation({
+  const { mutateAsync, isPending: creating, isError, error } = useMutation({
     mutationFn: createIncident,
   });
 
