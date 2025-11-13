@@ -21,6 +21,36 @@ router.get("/", requireAuth, async (req, res) => {
   res.json(data);
 });
 
+// GET /incidents/:id – detalle de un incidente
+router.get("/:id", requireAuth, async (req, res) => {
+  const { id } = req.params;
+
+  // Validar id mínimamente
+  const idOk = z.string().min(10).safeParse(id);
+  if (!idOk.success) return res.status(400).json({ message: "Invalid incident id" });
+
+  const incident = await prisma.incident.findUnique({
+    where: { id },
+    include: {
+      service: true,
+      reporter: true,
+      assignee: true,
+      updates: {
+        include: {
+          user: true,
+        },
+        orderBy: { createdAt: "desc" },
+      },
+    },
+  });
+
+  if (!incident) {
+    return res.status(404).json({ message: "Incident not found" });
+  }
+
+  return res.json(incident);
+});
+
 // POST /incidents – cualquier autenticado (reporter/support/admin)
 const createSchema = z.object({
   title: z.string().min(3),

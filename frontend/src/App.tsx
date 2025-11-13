@@ -1,10 +1,10 @@
-// src/App.tsx
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
-
+import {type JSX} from "react";
 import LoginPage from "./pages/LoginPage";
 import IncidentsListPage from "./pages/IncidentsListPage";
 import CreateIncidentPage from "./pages/CreateIncidentPage";
+import IncidentDetailPage from "./pages/IncidentDetailPage";
 import ServicesPage from "./pages/ServicesPage";
 import AppLayout from "./components/layout/AppLayout";
 
@@ -44,6 +44,15 @@ const App = () => {
         element={
           isAuthenticated
             ? withLayout(<CreateIncidentPage />)
+            : <Navigate to="/login" replace />
+        }
+      />
+
+      <Route
+        path="/incidents/:id"
+        element={
+          isAuthenticated
+            ? withLayout(<IncidentDetailPage />)
             : <Navigate to="/login" replace />
         }
       />
