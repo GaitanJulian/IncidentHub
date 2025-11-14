@@ -6,11 +6,9 @@ It provides authentication with JWT, incident tracking, service management, role
 ## 🚀 Production Deployment
 
 - **API Base URL:** https://incidenthub-kxjp.onrender.com  
-- **Swagger UI:** https://incidenthub-kxjp.onrender.com/docs  
-- **Health Check:** https://incidenthub-kxjp.onrender.com/health  
 
 ### **Frontend Dashboard**
-*(Optional: add your Vercel/Netlify URL here once deployed)*  
+- **Frontend Deployment:** https://incident-89vl06psn-julians-projects-389143e1.vercel.app 
 - **Local Development:** http://localhost:5173 
 
 
